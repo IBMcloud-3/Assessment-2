@@ -1,0 +1,53 @@
+#!/usr/bin/bash
+
+while getopts ":p:c:" opt; do
+  case $opt in
+    p)
+      PLATFORM=$OPTARG
+      ;;
+    c)
+      COMMAND=$OPTARG
+      ;;
+    \?)
+      echo "Invalid option: -$OPTARG" >&2
+      exit 1
+      ;;
+    :)
+      echo "Option -$OPTARG requires an argument." >&2
+      exit 1
+      ;;
+  esac
+done
+
+if [ -z "$PLATFORM" ] || [ -z "$COMMAND" ]; then
+  echo "Usage: $0 -p platform -c command"
+  exit 1
+fi
+
+if [ "$PLATFORM" = "minikube" ]; then
+  # Set context to Minikube
+  kubectl config use-context minikube
+
+  if [ "$COMMAND" = "deploy" ]; then
+    # Create namespaces
+    kubectl create namespace namespace1
+    kubectl create namespace namespace2
+
+    # Apply deployments and services with appropriate namespaces and images
+    for i in {1..4}; do
+      kubectl apply -f deployment-namespace1-pod$i.yaml -n namespace1
+      kubectl apply -f deployment-namespace2-pod$i.yaml -n namespace2
+    done
+
+    # Apply services
+    kubectl apply -f service-namespace1.yaml -n namespace1
+    kubectl apply -f service-namespace2.yaml -n namespace2
+  else
+    echo "Unknown command: $COMMAND"
+    exit 1
+  fi
+else
+  echo "Unsupported platform: $PLATFORM"
+  exit 1
+fi
+
