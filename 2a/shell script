@@ -28,7 +28,7 @@ if [ "$PLATFORM" = "minikube" ]; then
   # Set context to Minikube
   kubectl config use-context minikube
 
-  if [ "$COMMAND" = "deploy" ]; then
+  if [[ "$COMMAND" = "deploy" || "$COMMAND" = "deploy-complete" ]]; then
     # Create namespaces
     kubectl create namespace namespace1
     kubectl create namespace namespace2
@@ -40,8 +40,10 @@ if [ "$PLATFORM" = "minikube" ]; then
     done
 
     # Apply services
+    if [ "$COMMAND" = "deploy-complete" ]; then
     kubectl apply -f service-namespace1.yaml -n namespace1
     kubectl apply -f service-namespace2.yaml -n namespace2
+    fi
   else
     echo "Unknown command: $COMMAND"
     exit 1
@@ -51,3 +53,7 @@ else
   exit 1
 fi
 
+
+ 
+# Input:  ./shell-script -p minikube -c deploy    (Deploy deployment i.e. create namespace with sample 4 pods)
+# Input:  ./shell-script -p minikube -c deploy-complete    (create ns with pods and services to communicate between them, mention as the service is created)
