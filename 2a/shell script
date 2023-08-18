@@ -39,7 +39,7 @@ if [ "$PLATFORM" = "minikube" ]; then
       kubectl apply -f deployment-namespace2-pod$i.yaml -n namespace2
     done
 
-    # Apply services
+    # Creating Service
     if [ "$COMMAND" = "deploy-complete" ]; then
     kubectl apply -f service-namespace1.yaml -n namespace1
     kubectl apply -f service-namespace2.yaml -n namespace2
