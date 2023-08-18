@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-namespace1-pod3 
+  namespace: namespace1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app-namespace1-pod3 
+  template:
+    metadata:
+      labels:
+        app: app-namespace1-pod3 
+    spec:
+      containers:
+      - name: container-namespace1-pod3
+        image: nginx:latest 
