@@ -1,0 +1,69 @@
+#!/usr/bin/bash
+
+while getopts ":p:v:f:" opt; do
+  case $opt in
+    p)
+      platform="$OPTARG"
+      ;;
+    f)
+      feature="$OPTARG"
+      ;;
+    v)
+      version="$OPTARG"
+      ;;
+    \?)
+      echo "Invalid option: -$OPTARG" >&2
+      exit 1
+      ;;
+    :)
+      echo "Option -$OPTARG requires an argument." >&2
+      exit 1
+      ;;
+  esac
+done
+if [ -z "$platform" ] || [ -z "$feature" ] ; then
+  echo "Usage: $0 -p <platform> -f <feature> "
+  exit 1
+fi
+
+case $platform in
+  "minikube")
+    case $feature in
+      "install")
+        OS=$(uname -s)
+        # Determine the Minikube binary name based on OS
+        case "$OS" in
+    "Darwin")
+        MINIKUBE_BINARY="minikube-darwin-amd64"
+        ;;
+    "Linux")
+	MINIKUBE_BINARY="minikube-linux-amd64"                                                                                                                                                                                              MINIKUBE_BINARY="minikube-linux-amd64"
+        ;;
+    "Windows_NT")
+        MINIKUBE_BINARY="minikube-windows-amd64.exe"
+        ;;
+    *)
+        ;;
+        esac
+        # Download the latest Minikube package
+        MINIKUBE_URL="https://storage.googleapis.com/minikube/releases/latest/$MINIKUBE_BINARY"
+        curl -Lo minikube "$MINIKUBE_URL"
+        echo "Minikube Installation Successfull..."
+        ;;
+        *)
+        echo "Invalid feature: $feature for platform: $platform"
+        exit 1
+        ;;
+    esac
+    ;;
+  *)
+    echo "Invalid platform: $platform"
+    exit 1
+    ;;
+esac
+
+if command -v minikube &>/dev/null; then
+  echo "Minikube is installed."
+else
+  echo "Minikube is not installed."
+fi       
