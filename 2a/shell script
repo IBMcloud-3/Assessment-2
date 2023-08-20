@@ -33,11 +33,17 @@ if [ "$PLATFORM" = "minikube" ]; then
     kubectl create namespace namespace1
     kubectl create namespace namespace2
 
-    # Apply deployments and services with appropriate namespaces and images
-    for i in {1..4}; do
-      kubectl apply -f deployment-namespace1-pod$i.yaml -n namespace1
-      kubectl apply -f deployment-namespace2-pod$i.yaml -n namespace2
-    done
+   # Create four pods in the first namespace
+  kubectl create deployment pod1-namespace1 --image=nginx --namespace=namespace1
+  kubectl create deployment pod2-namespace1 --image=nginx --namespace=namespace1
+  kubectl create deployment pod3-namespace1 --image=nginx --namespace=namespace1
+  kubectl create deployment pod4-namespace1 --image=nginx --namespace=namespace1
+  # Create four pods in the second namespace
+  kubectl create deployment pod1-namespace2 --image=nginx --namespace=namespace2
+  kubectl create deployment pod2-namespace2 --image=nginx --namespace=namespace2
+  kubectl create deployment pod3-namespace2 --image=nginx --namespace=namespace2
+  kubectl create deployment pod4-namespace2 --image=nginx --namespace=namespace2
+
 
     # Creating Service
     if [ "$COMMAND" = "deploy-complete" ]; then
